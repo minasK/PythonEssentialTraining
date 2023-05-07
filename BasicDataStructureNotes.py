@@ -12,4 +12,16 @@ print(myList[::-6])
 
 myList = [1,2,3,4]
 myList.append(6)
+myList.insert(4, 'new value')
+print(myList)
+myList.remove('new value')
+print(myList)
+# pop removes the last one
+myList.pop()
+print(myList)
+
+# while the len is not 0, pop and pop
+while len(myList):
+    print(myList.pop())
+
 print(myList)
