@@ -14,35 +14,40 @@ class Messenger:
             listener.receive(message)
 
     def receive(self, message):
-        # Must be implemented by extending classes
         pass
 
+
+class TooManyMessagesException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Message "{message}" could not be added. please clear the existing ones.')
 
 class SaveMessages(Messenger):
     def __init__(self, listeners=[]):
         super().__init__(listeners)
         self.messages = []
+        self.max_messages = 10
 
     def receive(self, message):
+        if len(self.messages) >= self.max_messages:
+            raise TooManyMessagesException(message)
+            pass
         self.messages.append({'message': message, 'time': getCurrentTime()})
 
     def printMessages(self):
         for m in self.messages:
             print(f'Message: "{m["message"]}" Time: {m["time"]}')
-            self.messages = []
+        self.messages = []
 
-
-# Run this cell after you've written your solution
 listener = SaveMessages()
-
 sender = Messenger([listener])
 
-sender.send('Hello, there! This is the first message')
 
-# Run this cell after you've written your solution
-sender.send('Oh hi! This is the second message!')
-
-# Run this cell after you've written your solution
-sender.send('Hola! This is the third and final message!')
-
+for i in range(0, 1000):
+    try:
+        sender.send(f'this is a message {i}')
+    except TooManyMessagesException:
+        listener.printMessages()
+        sender.send(f'this is message {i}')
 listener.printMessages()
+
+print(f'name is: {__name__}')
